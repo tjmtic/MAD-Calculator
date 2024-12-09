@@ -1,5 +1,7 @@
 [versions]
 agp = "8.7.0"
+hiltAndroid = "2.48.1"
+hiltNavigationCompose = "1.1.0"
 kotlin = "2.0.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -11,10 +13,14 @@ composeBom = "2024.04.01"
 jetbrainsKotlinJvm = "2.0.0"
 kotlinxCoroutinesCore = "1.9.0"
 kotlinxCoroutinesTest = "1.7.1"
+ksp = "1.9.21-1.0.15"
 
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltAndroid" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -38,4 +44,6 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+android-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid"}
+kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
 

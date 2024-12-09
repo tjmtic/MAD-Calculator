@@ -38,6 +38,7 @@ Hilt
 --Unidirectional Data Flow
 --Sealed Class States
 --Feature/Module Architecture
+--Pure Kotlin Module
 --Interface/Implementation pattern definitions
 --Repository pattern
 --Dependency Injection

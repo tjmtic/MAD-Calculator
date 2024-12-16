@@ -22,3 +22,4 @@ dependencyResolutionManagement {
 rootProject.name = "Snap App"
 include(":app")
 include(":calculator")
+include(":core:database")

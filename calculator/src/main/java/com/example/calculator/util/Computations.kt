@@ -11,6 +11,7 @@ object Computations {
         try {
             for (input in expression) {
                 when (input) {
+                    is CalculatorInput.Input -> stack.addLast(input.value.toDouble())
                     is CalculatorInput.Number -> stack.addLast(input.value)
                     is CalculatorInput.Operator -> {
                         if (stack.size < 2) {

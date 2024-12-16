@@ -1,6 +1,11 @@
 package com.example.calculator.models
 
 sealed class CalculatorInput {
+    data class Input(val value: Int) : CalculatorInput(){
+        override fun toString(): String {
+            return value.toString()
+        }
+    }
     data class Number(val value: Double) : CalculatorInput(){
         override fun toString(): String {
             return value.toString()

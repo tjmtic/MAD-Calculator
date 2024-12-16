@@ -12,6 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,13 +23,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.calculator.models.CalculatorInput
+import com.example.calculator.models.Subtract
+import com.example.snapapp.calculator.CalculatorConstants.EXTRAS
 import com.example.snapapp.calculator.CalculatorConstants.INPUTS
 import com.example.snapapp.calculator.CalculatorConstants.OPERATIONS
 import com.example.snapapp.ui.theme.MyApplicationTheme
 
 data class CalculatorScreenState(
-    val inputs: List<CalculatorInput.Number>,
+    val inputs: List<CalculatorInput.Input>,
     val operations: List<CalculatorInput.Operator>,
+    val extras: List<String>,
     val expression: String = "",
     val lastResult: Double? = null,
     val isLoading: Boolean = false,
@@ -39,6 +44,7 @@ fun CalculatorRoute(viewModel: CalculatorViewModel = hiltViewModel()) {
     //Route-level definitions
     val inputs = INPUTS
     val operations = OPERATIONS
+    val extras = EXTRAS
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val calculatorState by viewModel.calculatorState.collectAsStateWithLifecycle()
@@ -47,6 +53,7 @@ fun CalculatorRoute(viewModel: CalculatorViewModel = hiltViewModel()) {
         uiState = CalculatorScreenState(
             inputs = inputs,
             operations = operations,
+            extras = extras,
             expression = calculatorState.inputs.joinToString(" "){ it.toString() },
             lastResult = calculatorState.result,
             isLoading = uiState.isLoading,
@@ -80,11 +87,14 @@ fun CalculatorScreen(
             error = uiState.error
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        //Spacer(modifier = Modifier.height(8.dp))
+
+        //Spacer(modifier = Modifier.height(8.dp))
 
         Keypad(
             inputs = uiState.inputs,
             operations = uiState.operations,
+            extras = uiState.extras,
             onInput = onInput,
             onCalculate = onCalculate,
             onClear = onClear
@@ -134,12 +144,26 @@ fun DisplayArea(
 
 @Composable
 fun Keypad(
-    inputs: List<CalculatorInput.Number>,
+    inputs: List<CalculatorInput.Input>,
     operations: List<CalculatorInput.Operator>,
+    extras: List<String>,
     onInput: (CalculatorInput) -> Unit,
     onCalculate: () -> Unit,
     onClear: () -> Unit
 ) {
+    val curInput = rememberSaveable {
+        mutableStateOf("")
+    }
+    val numberRegex = Regex("^-?\\d+(\\.\\d+)?$")
+    val isValidNumber = rememberSaveable(curInput) {
+        numberRegex.matches(curInput.value)
+    }
+
+    Text(
+        text = "Current: ${curInput.value}",
+        style = TextStyle(fontSize = 14.sp, color = Color.Gray)
+    )
+
     LazyVerticalGrid(
         columns = GridCells.Fixed(4),
         modifier = Modifier
@@ -151,7 +175,9 @@ fun Keypad(
             CalculatorButton(
                 text = input.value.toString(),
                 modifier = Modifier.padding(8.dp),
-                onClick = { onInput(input) }
+                onClick = { //onInput(input)
+                    curInput.value = curInput.value.plus(input)
+                }
             )
         }
 
@@ -159,7 +185,40 @@ fun Keypad(
             CalculatorButton(
                 text = operation.operation.toString(),
                 modifier = Modifier.padding(8.dp),
-                onClick = { onInput(operation) }
+                onClick = {
+                    if(operation.operation is Subtract && curInput.value.isEmpty()){
+                        curInput.value = curInput.value.plus(operation.toString())
+                    }
+                    else onInput(operation)
+                }
+            )
+        }
+
+        items(extras) { extra ->
+            CalculatorButton(
+                text = extra,
+                modifier = Modifier.padding(8.dp),
+                onClick = {
+                    println("Extra for ${curInput.value}")
+                    if(extra == " " && isValidNumber) {
+                        onInput(CalculatorInput.Number(curInput.value.toDouble()))
+                        curInput.value = ""
+                    }
+
+                    else curInput.value = curInput.value.plus(extra)
+                }
+            )
+        }
+
+        item {
+            CalculatorButton(
+                text = "Delete",
+                modifier = Modifier.padding(8.dp),
+                onClick = {
+                    if(curInput.value.isNotEmpty()) curInput.value = curInput.value.removeRange(curInput.value.lastIndex, curInput.value.lastIndex+1)
+
+                    println("Deleting ${curInput.value}")
+                }
             )
         }
 
@@ -207,7 +266,7 @@ fun CalculatorButton(
 @Composable
 fun PreviewCalculatorScreen(){
     MyApplicationTheme {
-        CalculatorScreen(CalculatorScreenState(INPUTS, OPERATIONS, "1 2 +",
+        CalculatorScreen(CalculatorScreenState(INPUTS, OPERATIONS, EXTRAS,"1 2 +",
             0.0,
             false,
             null),
@@ -243,7 +302,7 @@ fun PreviewDisplayAreaError(){
 @Composable
 fun PreviewKeypad(){
     MyApplicationTheme {
-        Keypad(INPUTS, OPERATIONS, {},{},{})
+        Keypad(INPUTS, OPERATIONS, EXTRAS, {},{},{})
     }
 }
 

@@ -47,8 +47,10 @@ Hilt
 
 *Possible Future Work*
 -README
+-RPN Error Validation improvements
 -UI Design Improvements
 -ViewModel state tests with mock dependencies, and Turbine dependency for flow state testing
 -Database implementation for storing result
 -Calculator Feature separate module
 -Core module separation (Model, Database, Repository, UI)
+-Additional Testing

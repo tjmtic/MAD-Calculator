@@ -7,23 +7,28 @@ import com.example.calculator.models.Multiply
 import com.example.calculator.models.Subtract
 
 object CalculatorConstants {
-    val INPUTS: List<CalculatorInput.Number> = listOf(
-        CalculatorInput.Number(0.0),
-        CalculatorInput.Number(1.0),
-        CalculatorInput.Number(2.0),
-        CalculatorInput.Number(3.0),
-        CalculatorInput.Number(4.0),
-        CalculatorInput.Number(5.0),
-        CalculatorInput.Number(6.0),
-        CalculatorInput.Number(7.0),
-        CalculatorInput.Number(8.0),
-        CalculatorInput.Number(9.0)
+    val INPUTS: List<CalculatorInput.Input> = listOf(
+        CalculatorInput.Input(0),
+        CalculatorInput.Input(1),
+        CalculatorInput.Input(2),
+        CalculatorInput.Input(3),
+        CalculatorInput.Input(4),
+        CalculatorInput.Input(5),
+        CalculatorInput.Input(6),
+        CalculatorInput.Input(7),
+        CalculatorInput.Input(8),
+        CalculatorInput.Input(9)
     )
 
     val OPERATIONS: List<CalculatorInput.Operator> = listOf(
         CalculatorInput.Operator(Add),
         CalculatorInput.Operator(Subtract),
         CalculatorInput.Operator(Multiply),
-        CalculatorInput.Operator(Divide)
+        CalculatorInput.Operator(Divide),
+    )
+
+    val EXTRAS: List<String> = listOf(
+        " ",
+        "."
     )
 }

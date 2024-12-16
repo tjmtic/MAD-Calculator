@@ -155,7 +155,7 @@ fun Keypad(
         mutableStateOf("")
     }
     val numberRegex = Regex("^-?\\d+(\\.\\d+)?$")
-    val isValidNumber = rememberSaveable(curInput) {
+    val isValidNumber = rememberSaveable(curInput.value) {
         numberRegex.matches(curInput.value)
     }
 
@@ -189,7 +189,13 @@ fun Keypad(
                     if(operation.operation is Subtract && curInput.value.isEmpty()){
                         curInput.value = curInput.value.plus(operation.toString())
                     }
-                    else onInput(operation)
+                    else {
+                        if(isValidNumber) {
+                            onInput(CalculatorInput.Number(curInput.value.toDouble()))
+                            curInput.value = ""
+                            onInput(operation)
+                        }
+                    }
                 }
             )
         }
@@ -199,7 +205,6 @@ fun Keypad(
                 text = extra,
                 modifier = Modifier.padding(8.dp),
                 onClick = {
-                    println("Extra for ${curInput.value}")
                     if(extra == " " && isValidNumber) {
                         onInput(CalculatorInput.Number(curInput.value.toDouble()))
                         curInput.value = ""
@@ -226,7 +231,7 @@ fun Keypad(
             CalculatorButton(
                 text = "Enter",
                 modifier = Modifier.padding(8.dp),
-                onClick = { onCalculate() }
+                onClick = { curInput.value = ""; onCalculate() }
             )
         }
 
@@ -234,7 +239,7 @@ fun Keypad(
             CalculatorButton(
                 text = "Clear",
                 modifier = Modifier.padding(8.dp),
-                onClick = { onClear() }
+                onClick = { curInput.value = ""; onClear() }
             )
         }
     }
